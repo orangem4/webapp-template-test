@@ -1,0 +1,11 @@
+#!/bin/env bash
+
+set -o errexit
+
+export PIP_DISABLE_PIP_VERSION_CHECK=1
+export PIP_ROOT_USER_ACTION=ignore
+export PYTHONPATH="$HOME/.cache/deps"
+
+if ! [ -d $PYTHONPATH/pg8000 ]; then
+  python3 -m pip install -r requirements.txt --target=$PYTHONPATH
+fi

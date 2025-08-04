@@ -1,0 +1,71 @@
+modules:
+  - id: app-base
+    module: polytope/python
+    params:
+      - id: cmd
+        info: The command to run. Runs a Python shell if left blank.
+        type: [maybe, str]
+      - id: env
+        info: Environment variables for the container.
+        type: [maybe, [{name: str, value: str}]]
+      - id: services
+        info: Services to expose.
+        type: [maybe, [service-spec]]
+      - id: id
+        info: The name of the container to run.
+        type: [default, str, app]
+    args:
+      cmd: '#pt-param cmd'
+      code: {type: host, path: .}
+      env: '#pt-param env'
+      id: '#pt-param id'
+      services: '#pt-param services'
+      mounts:
+        - path: /root/.cache/
+          source:
+            type: volume
+            scope: project
+            id: dependency-cache
+  - id: lint
+    module: app-base
+    args: {cmd: ./bin/lint, id: lint}
+  - id: test
+    module: app-base
+    args: {cmd: ./bin/test, id: test}
+  - id: app
+    module: app-base
+    args:
+      cmd: ./bin/run
+      env: [{name: PG_HOST, value: postgres}]
+      services: [{id: app, ports: [{protocol: http, port: 8000}]}]
+  - id: postgres
+    module: polytope/postgres!simple
+    args:
+      container-id: postgres
+      data-volume:
+        type: volume
+        scope: project
+        id: pg-data
+  - id: hello-world-remote
+    module: polytope/hello-world
+templates:
+  - id: ci
+    run:
+      - lint
+      - module: test
+        after:
+          step: lint
+  - id: stack
+    run: [app, postgres]
+  - id: ci-review
+    run:
+      - lint
+      - module: test
+        after:
+          step: lint
+      - module: app
+        after:
+          step: test
+      - module: postgres
+        after:
+          step: test

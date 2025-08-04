@@ -1,0 +1,3 @@
+#!/bin/env bash
+
+rm -rf **/__pycache__ 2>/dev/null >/dev/null || true

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Example Web App</title>
+    <style>
+      body {
+        background: #e8f0fe;
+        font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+      h1 {
+        color: #333;
+        font-size: 2.5em;
+        margin-top: 0;
+      }
+      button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 15px 32px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+      }
+      button:hover { background-color: #45a049; }
+      #info {
+        margin-top: 20px;
+        font-size: 1.2em;
+        color: green;
+      }
+      #info.error { color: red; }
+    </style>
+  </head>
+  <body>
+    <h1>Hello World!</h1>
+    <button id="button">Check status</button>
+    <div id="info"></div>
+
+    <script>
+      var button = document.getElementById("button")
+      var info = document.getElementById("info")
+      button.addEventListener("click", function() {
+        fetch("/check-connection")
+          .then(response => {
+            if(response.status == 200) {
+              info.classList.remove("error");
+              info.textContent = "Connected to the database :)";
+            } else if (response.status == 503) {
+              info.textContent = "Failed to connect to the database :(";
+              info.classList.add("error");
+            } else {
+              throw new Error("Got status " + response.status);
+            }
+          })
+        .catch(error => {
+          console.error(error);
+          info.textContent = "Failed to connect to the backend :(";
+          info.classList.add("error");
+        });
+      });
+    </script>
+  </body>
+</html>
