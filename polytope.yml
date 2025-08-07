@@ -16,7 +16,7 @@ modules:
         type: [default, str, app]
     args:
       cmd: '#pt-param cmd'
-      code: {type: host, path: .}
+      code: {type: repo}
       env: '#pt-param env'
       id: '#pt-param id'
       services: '#pt-param services'
