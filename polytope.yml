@@ -15,11 +15,11 @@ modules:
         info: The name of the container to run.
         type: [default, str, app]
     args:
-      cmd: '#pt-param cmd'
+      cmd: 'pt.param cmd'
       code: {type: repo}
-      env: '#pt-param env'
-      id: '#pt-param id'
-      services: '#pt-param services'
+      env: 'pt.param env'
+      id: 'pt.param id'
+      services: 'pt.param services'
       mounts:
         - path: /root/.cache/
           source:
