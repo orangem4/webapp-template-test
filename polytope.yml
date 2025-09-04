@@ -48,6 +48,16 @@ modules:
         id: pg-data
   - id: hello-world-remote
     module: polytope/hello-world
+  - id: mount-something-remote
+    module: polytope/container
+    args:
+      image: ubuntu
+      mounts:
+        - path: /foo
+          source:
+            type: repo
+            repo: "#pt-clj pt/module-repo-ref"
+            path: /index.html
 templates:
   - id: ci
     run:
